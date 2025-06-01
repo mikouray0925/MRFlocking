@@ -47,7 +47,7 @@ public:
                 continue;
             }
 
-            FVector Direction = AgentContext.Position - Collider->GetComponentLocation();
+            FVector Direction = AgentContext.Position - Collider->GetOwner()->GetActorLocation();
             float SquareDist = Direction.SizeSquared();
 
             if (SquareDist < SquareAvoidanceRadius)

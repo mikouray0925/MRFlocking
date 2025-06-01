@@ -1,21 +1,21 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/ActorComponent.h"
+#include "GameFramework/Actor.h"
 #include "FlocksContext.h"
 #include "FlockAgentContext.h"
 #include "FlockAgentSettings.h"
 #include "FlockBehaviour.h"
 #include "FlockAgent.generated.h"
 
-UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
-class MRFLOCKING_API UFlockAgent : public UActorComponent
+UCLASS(ClassGroup = (Custom))
+class MRFLOCKING_API AFlockAgent : public AActor
 {
     GENERATED_BODY()
 
 public:
     // Sets default values for this component's properties
-    UFlockAgent();
+    AFlockAgent();
 
 protected:
     // Called when the game starts
@@ -23,7 +23,7 @@ protected:
 
 public:
     // Called every frame
-    virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+    virtual void Tick(float DeltaTime) override;
 
     /** Settings */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Flock|Properties")

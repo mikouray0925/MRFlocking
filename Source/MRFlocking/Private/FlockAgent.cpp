@@ -5,42 +5,44 @@
 #include "Engine/OverlapResult.h"
 
 // Sets default values for this component's properties
-UFlockAgent::UFlockAgent()
+AFlockAgent::AFlockAgent()
 {
-    PrimaryComponentTick.bCanEverTick = true;
+    PrimaryActorTick.bCanEverTick = true;
+
+    // ¥[¤W RootComponent
+    RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
 }
 
 // Called when the game starts
-void UFlockAgent::BeginPlay()
+void AFlockAgent::BeginPlay()
 {
     Super::BeginPlay();
 
     // Find collider (assumes the root or first primitive)
-    AgentCollider = Cast<UPrimitiveComponent>(GetOwner()->GetRootComponent());
+    AgentCollider = Cast<UPrimitiveComponent>(GetRootComponent());
     Context.NearbyColliders = NearbyColliders;
 }
 
 // Called every frame
-void UFlockAgent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void AFlockAgent::Tick(float DeltaTime)
 {
-    Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+    Super::Tick(DeltaTime);
 
     // Debug visualization
     if (Behaviour)
     {
-        Behaviour->DrawGizmos(GetWorld(), GetOwner()->GetActorLocation(), AgentSettings ? AgentSettings->DetectionRadius : 100.f);
+        Behaviour->DrawGizmos(GetWorld(), GetActorLocation(), AgentSettings ? AgentSettings->DetectionRadius : 100.f);
     }
 }
 
-void UFlockAgent::UpdateContext(float DeltaTime, const FlocksContext& FlocksContext)
+void AFlockAgent::UpdateContext(float DeltaTime, const FlocksContext& FlocksContext)
 {
-    AActor* Owner = GetOwner();
-    if (!Owner || !AgentSettings) return;
+    if (!AgentSettings) return;
 
-    Context.Position = Owner->GetActorLocation();
-    Context.Forward = Owner->GetActorForwardVector();
-    Context.Up = Owner->GetActorUpVector();
-    Context.Transform = Owner;
+    Context.Position = GetActorLocation();
+    Context.Forward = GetActorForwardVector();
+    Context.Up = GetActorUpVector();
+    Context.Transform = this;
 
     Context.DetectionRadius = AgentSettings->DetectionRadius;
     Context.BaseSpeed = AgentSettings->BaseSpeed;
@@ -60,7 +62,7 @@ void UFlockAgent::UpdateContext(float DeltaTime, const FlocksContext& FlocksCont
 
     for (FOverlapResult& Result : Overlaps)
     { 
-        if (Result.Component.Get() != AgentCollider && Result.GetActor() != GetOwner())
+        if (Result.Component.Get() != AgentCollider && Result.GetActor() != this)
         {
             NearbyColliders.Add(Result.Component.Get());
         }
@@ -70,7 +72,7 @@ void UFlockAgent::UpdateContext(float DeltaTime, const FlocksContext& FlocksCont
     Context.NearbyCollidersCount = NearbyColliders.Num();
 }
 
-void UFlockAgent::UpdateVelocity(float DeltaTime, const FlocksContext& FlocksContext)
+void AFlockAgent::UpdateVelocity(float DeltaTime, const FlocksContext& FlocksContext)
 {
     if (!Behaviour || !AgentSettings) return;
 
@@ -88,20 +90,15 @@ void UFlockAgent::UpdateVelocity(float DeltaTime, const FlocksContext& FlocksCon
     }
 
     Velocity += DeltaVelocity;
-    AActor* Owner = GetOwner();
-    if (Owner)
+    FVector NewPosition = GetActorLocation() + Velocity * DeltaTime;
+    SetActorLocation(NewPosition);
+    if (Velocity.Size() > KINDA_SMALL_NUMBER)
     {
-        FVector NewPosition = Owner->GetActorLocation() + Velocity * DeltaTime;
-        Owner->SetActorLocation(NewPosition);
-
-        if (Velocity.Size() > KINDA_SMALL_NUMBER)
-        {
-            Owner->SetActorRotation(Velocity.Rotation());
-        }
+        SetActorRotation(Velocity.Rotation());
     }
 }
 
-void UFlockAgent::UpdateColliderArrayLength(int NewLength)
+void AFlockAgent::UpdateColliderArrayLength(int NewLength)
 {
     NearbyColliders.SetNum(NewLength);
     Context.NearbyColliders = NearbyColliders;

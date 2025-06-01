@@ -27,6 +27,10 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawner")
     float Radius;
 
+    // 半徑 (藍圖可見)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawner")
+    int DefaultSpawnNum = 1;
+
     UPROPERTY(EditAnywhere, Category = "Preview")
     UMaterialInterface* PreviewMaterial;
 
@@ -35,11 +39,13 @@ public:
 
     // 單個生成 (可在藍圖中呼叫)
     UFUNCTION(BlueprintCallable, CallInEditor, Category = "Spawner")
-    void Spawn();
+    void SpawnOne();
+
+    void SpawnMultiple(int32 Count);
 
     // 批次生成 (可在藍圖中呼叫)
     UFUNCTION(BlueprintCallable, CallInEditor, Category = "Spawner")
-    void SpawnMultiple(int32 Count);
+    void Spawn();
 
 protected:
     virtual void OnConstruction(const FTransform& Transform) override;  // 用於繪製編輯器中的球體

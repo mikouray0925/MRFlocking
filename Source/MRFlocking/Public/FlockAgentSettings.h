@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS(BlueprintType)
+UCLASS(BlueprintType, Blueprintable)
 class MRFLOCKING_API UFlockAgentSettings : public UDataAsset
 {
     GENERATED_BODY()

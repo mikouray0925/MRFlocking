@@ -39,7 +39,7 @@ public:
             const ECollisionChannel Channel = Collider->GetCollisionObjectType();
             if (DetectionChannels.Contains(Channel))
             {
-                MeanPosition += Collider->GetComponentLocation();
+                MeanPosition += Collider->GetOwner()->GetActorLocation();
                 ++ValidCount;
             }
         }

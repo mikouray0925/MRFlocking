@@ -6,6 +6,9 @@
 ASphereShape::ASphereShape()
 {
     PrimaryActorTick.bCanEverTick = false;
+
+    // ¥[¤W RootComponent
+    RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
 }
 
 void ASphereShape::OnConstruction(const FTransform& Transform)

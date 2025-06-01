@@ -22,7 +22,7 @@ ASphereSpawner::ASphereSpawner()
     PreviewSphere->SetVisibility(true);
 }
 
-void ASphereSpawner::Spawn()
+void ASphereSpawner::SpawnOne()
 {
     if (!TargetPrefab) return;
 
@@ -49,8 +49,13 @@ void ASphereSpawner::SpawnMultiple(int32 Count)
 {
     for (int32 i = 0; i < Count; ++i)
     {
-        Spawn();
+        SpawnOne();
     }
+}
+
+void ASphereSpawner::Spawn()
+{
+    SpawnMultiple(DefaultSpawnNum);
 }
 
 void ASphereSpawner::OnConstruction(const FTransform& Transform)

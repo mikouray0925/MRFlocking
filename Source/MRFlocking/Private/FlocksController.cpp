@@ -7,6 +7,9 @@
 AFlocksController::AFlocksController()
 {
     PrimaryActorTick.bCanEverTick = true;
+
+    // ¥[¤W RootComponent
+    RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
 }
 
 void AFlocksController::BeginPlay()
@@ -34,7 +37,7 @@ void AFlocksController::Tick(float DeltaTime)
         Context.ConfinerForward = FVector::ZeroVector;
     }
 
-    for (UFlockAgent* Agent : Agents)
+    for (AFlockAgent* Agent : Agents)
     {
         if (Agent)
         {
@@ -42,7 +45,7 @@ void AFlocksController::Tick(float DeltaTime)
         }
     }
 
-    for (UFlockAgent* Agent : Agents)
+    for (AFlockAgent* Agent : Agents)
     {
         if (Agent)
         {
@@ -59,7 +62,7 @@ void AFlocksController::GetAgentsFromChildren()
 
     for (AActor* Child : ChildActors)
     {
-        if (UFlockAgent* Agent = Cast<UFlockAgent>(Child))
+        if (AFlockAgent* Agent = Cast<AFlockAgent>(Child))
         {
             Agents.Add(Agent);
         }
@@ -68,11 +71,11 @@ void AFlocksController::GetAgentsFromChildren()
 
 void AFlocksController::DestroyAllAgents()
 {
-    for (UFlockAgent* Agent : Agents)
+    for (AFlockAgent* Agent : Agents)
     {
         if (Agent)
         {
-            Agent->GetOwner()->Destroy();
+            Agent->Destroy();
         }
     }
     Agents.Empty();

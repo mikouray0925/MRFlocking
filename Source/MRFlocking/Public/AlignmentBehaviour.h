@@ -35,7 +35,7 @@ public:
         {
             if (Collider && DetectionChannels.Contains(Collider->GetCollisionObjectType()))
             {
-                FTransform OtherTransform = Collider->GetComponentTransform();
+                FTransform OtherTransform = Collider->GetOwner()->GetTransform();
                 MeanDirection += OtherTransform.GetRotation().GetForwardVector();
                 ++NearbyCount;
             }

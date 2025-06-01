@@ -28,15 +28,15 @@ public:
     TArray<AActor*> TargetPoints;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Agents")
-    TArray<UFlockAgent*> Agents;
+    TArray<AFlockAgent*> Agents;
 
     UPROPERTY()
     FlocksContext Context;
 
-    UFUNCTION(BlueprintCallable, Category = "Common")
+    UFUNCTION(BlueprintCallable, CallInEditor, Category = "Common")
     void GetAgentsFromChildren();
 
-    UFUNCTION(BlueprintCallable, Category = "Common")
+    UFUNCTION(BlueprintCallable, CallInEditor, Category = "Common")
     void DestroyAllAgents();
 
 };
