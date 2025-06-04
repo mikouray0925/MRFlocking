@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "FlockBehaviour.h"
 #include "SphereShape.h"
+#include "BoxShape.h"
 #include "ConfinedBehaviour.generated.h"
 
 /**
@@ -28,8 +29,30 @@ public:
 			float DistanceUnits = ToCenter.Size() / SphereConfiner->Radius;
 			return ToCenter * AgentContext.BaseSpeed * FMath::Pow(DistanceUnits, Power);
 		}
+        else if (const ABoxShape* Box = Cast<ABoxShape>(FlocksContext.Confiner))
+        {
+            const FVector ToCenter = Box->GetActorLocation() - AgentContext.Position;
 
-		// TODO: 以後可以實現 BoxShape 的情況
+            const FVector Right = FlocksContext.ConfinerRight;
+            const FVector Up = FlocksContext.ConfinerUp;
+            const FVector Forward = FlocksContext.ConfinerForward;
+
+            const FVector RightPortion = FVector::DotProduct(ToCenter, Right) * Right;
+            const FVector UpPortion = FVector::DotProduct(ToCenter, Up) * Up;
+            const FVector ForwardPortion = FVector::DotProduct(ToCenter, Forward) * Forward;
+
+            const FVector HalfSize = Box->GetWorldSize() * 0.5f;
+
+            const float RightUnits = RightPortion.Size() / FMath::Max(HalfSize.X, KINDA_SMALL_NUMBER);
+            const float UpUnits = UpPortion.Size() / FMath::Max(HalfSize.Y, KINDA_SMALL_NUMBER);
+            const float ForwardUnits = ForwardPortion.Size() / FMath::Max(HalfSize.Z, KINDA_SMALL_NUMBER);
+
+            return AgentContext.BaseSpeed * (
+                RightPortion * FMath::Pow(RightUnits, Power) +
+                UpPortion * FMath::Pow(UpUnits, Power) +
+                ForwardPortion * FMath::Pow(ForwardUnits, Power)
+                );
+        }
 
 		return FVector::ZeroVector;
 	}

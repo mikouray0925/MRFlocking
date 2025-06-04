@@ -32,6 +32,10 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Flock|Properties")
     UFlockBehaviour* Behaviour;
 
+    /** Whether to draw debug box in editor */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Flock|Properties")
+    bool bDrawGizmos = true;
+
     /** Context */
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Flock|Context")
     FVector Velocity = FVector::ZeroVector;

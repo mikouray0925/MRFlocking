@@ -29,7 +29,7 @@ void AFlockAgent::Tick(float DeltaTime)
     Super::Tick(DeltaTime);
 
     // Debug visualization
-    if (Behaviour)
+    if (bDrawGizmos)
     {
         Behaviour->DrawGizmos(GetWorld(), GetActorLocation(), AgentSettings ? AgentSettings->DetectionRadius : 100.f);
     }
