@@ -48,5 +48,7 @@ public:
     void Spawn();
 
 protected:
+    virtual void OnSpawn(AActor* Spawned) {};
+
     virtual void OnConstruction(const FTransform& Transform) override;  // 用於繪製編輯器中的球體
 };

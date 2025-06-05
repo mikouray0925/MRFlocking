@@ -38,10 +38,12 @@ void ASphereSpawner::SpawnOne()
         {
             Spawned->AttachToActor(TargetParent, FAttachmentTransformRules::KeepWorldTransform);
         }
+        OnSpawn(Spawned);
     }
     else
     {
-        GetWorld()->SpawnActor<AActor>(TargetPrefab, Position, Rotation);
+        AActor* Spawned = GetWorld()->SpawnActor<AActor>(TargetPrefab, Position, Rotation);
+        OnSpawn(Spawned);
     }
 }
 
